@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cake Archive</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #fde9e9;
+            color: #333;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #3a0f08;
+            color: rgb(248, 242, 209);
+            text-align: center;
+            padding: 25px 0;
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .search-container input {
+            padding: 15px;
+            width: 70%;
+            max-width: 500px;
+            border-radius: 8px;
+            border: 2px solid #39110a;
+            font-size: 1.4rem;
+            transition: 0.3s;
+            outline: none;
+        }
+
+        .search-container input:focus {
+            border-color: #3f0d27;
+            box-shadow: 0 0 8px rgba(255, 99, 71, 0.5);
+        }
+
+        .categories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .category-item {
+            background-color: #fdc6c6;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .category-item h3 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .category-item p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .category-item:hover {
+            background-color: #f9ffc4;
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            color: rgb(91, 1, 1);
+        }
+
+        .category-content {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .category-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .category-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-content h2 {
+            font-size: 2.5rem;
+            color: #FF6347;
+            margin-bottom: 20px;
+        }
+
+        .category-content p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .cake-fact {
+            background-color: #FFEBE5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #888;
+            font-size: 1.2rem;
+        }
+
+        footer a {
+            color: #210804;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        The Cake Archive
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for cakes...">
+    </div>
+
+    <div class="categories-container" id="categories">
+        <div class="category-item" data-category="chocolate">
+            <h3>Chocolate Cakes</h3>
+            <p>Indulge in the rich and decadent world of chocolate cakes.</p>
+        </div>
+        <div class="category-item" data-category="vintage">
+            <h3>Vintage Cakes</h3>
+            <p>Explore classic cake recipes from the past.</p>
+        </div>
+        <div class="category-item" data-category="unique">
+            <h3>Unique Cakes</h3>
+            <p>Discover quirky and unconventional cakes!</p>
+        </div>
+        <div class="category-item" data-category="fruit">
+            <h3>Fruit Cakes</h3>
+            <p>Fresh and fruity, perfect for a summer treat.</p>
+        </div>
+        <div class="category-item" data-category="vegan">
+            <h3>Vegan Cakes</h3>
+            <p>Delicious cakes made without animal products.</p>
+        </div>
+        <div class="category-item" data-category="cheesecake">
+            <h3>Cheesecakes</h3>
+            <p>Rich, creamy, and perfect for any occasion.</p>
+        </div>
+        <div class="category-item" data-category="birthday">
+            <h3>Birthday Cakes</h3>
+            <p>Celebration cakes for your special day.</p>
+        </div>
+        <div class="category-item" data-category="glutenfree">
+            <h3>Gluten-Free Cakes</h3>
+            <p>Delicious cakes without any gluten!</p>
+        </div>
+        <div class="category-item" data-category="carrot">
+            <h3>Carrot Cakes</h3>
+            <p>Healthy and flavorful carrot cakes with a touch of spice.</p>
+        </div>
+        <div class="category-item" data-category="coffee">
+            <h3>Coffee Cakes</h3>
+            <p>Perfect cakes for coffee lovers, with rich and aromatic flavors.</p>
+        </div>
+        <div class="category-item" data-category="redvelvet">
+            <h3>Red Velvet Cakes</h3>
+            <p>A vibrant red cake, famous for its smooth cream cheese frosting.</p>
+        </div>
+        <div class="category-item" data-category="lemon">
+            <h3>Lemon Cakes</h3>
+            <p>Refreshing and tangy lemon cakes, perfect for citrus lovers.</p>
+        </div>
+        <div class="category-item" data-category="pumpkin">
+            <h3>Pumpkin Cakes</h3>
+            <p>Delicious and spiced pumpkin cakes, ideal for autumn celebrations.</p>
+        </div>
+        
+    </div>
+
+    <div class="category-content" id="chocolate-content">
+        <img src="https://via.placeholder.com/600x400?text=Chocolate+Cake" alt="Chocolate Cake">
+        <h2>Chocolate Cake Recipe</h2>
+        <p>This rich chocolate cake is the perfect treat for any occasion. Made with high-quality cocoa and topped with a smooth chocolate ganache, it’s sure to satisfy your cravings.</p>
+        <div class="cake-fact">Did you know? The first chocolate cake recipe dates back to 1765!</div>
+    </div>
+
+    <div class="category-content" id="vintage-content">
+        <img src="https://via.placeholder.com/600x400?text=Vintage+Cake" alt="Vintage Cake">
+        <h2>Vintage Cake Recipe</h2>
+        <p>Step back in time with this vintage sponge cake recipe that’s been passed down through generations.</p>
+        <div class="cake-fact">Vintage cakes often use simpler ingredients, resulting in a lighter, fluffier texture.</div>
+    </div>
+
+    <div class="category-content" id="unique-content">
+        <img src="https://via.placeholder.com/600x400?text=Unique+Cake" alt="Unique Cake">
+        <h2>Unique Cake Recipe</h2>
+        <p>Looking for something new? Try this out-of-the-box unique cake recipe that combines unexpected flavors!</p>
+        <div class="cake-fact">Unique cakes are all about creative combinations—don’t be afraid to experiment!</div>
+    </div>
+
+    <div class="category-content" id="fruit-content">
+        <img src="https://via.placeholder.com/600x400?text=Fruit+Cake" alt="Fruit Cake">
+        <h2>Fruit Cake Recipe</h2>
+        <p>Fresh fruits combine perfectly in this light and fluffy fruit cake, perfect for warm weather celebrations.</p>
+        <div class="cake-fact">Fruit cakes are often enjoyed during holiday seasons, but they make a great summer treat too!</div>
+    </div>
+
+    <div class="category-content" id="vegan-content">
+        <img src="https://via.placeholder.com/600x400?text=Vegan+Cake" alt="Vegan Cake">
+        <h2>Vegan Cake Recipe</h2>
+        <p>Rich and moist, this vegan cake will surprise you with its depth of flavor, all without any animal-based ingredients.</p>
+        <div class="cake-fact">Vegan cakes use plant-based ingredients, making them suitable for various dietary preferences.</div>
+    </div>
+
+    <div class="category-content" id="cheesecake-content">
+        <img src="https://via.placeholder.com/600x400?text=Cheesecake" alt="Cheesecake">
+        <h2>Cheesecake Recipe</h2>
+        <p>This cheesecake is creamy and velvety, with a perfect balance of tanginess and sweetness.</p>
+        <div class="cake-fact">Cheesecake recipes date back to ancient Greece, and they've evolved into many delightful variations today!</div>
+    </div>
+
+    <div class="category-content" id="birthday-content">
+        <img src="https://via.placeholder.com/600x400?text=Birthday+Cake" alt="Birthday Cake">
+        <h2>Birthday Cake Recipe</h2>
+        <p>Nothing says "celebration" like a birthday cake! This moist and fluffy cake is decorated to bring joy to any occasion.</p>
+        <div class="cake-fact">Birthday cakes are an essential part of birthday celebrations in many cultures!</div>
+    </div>
+
+    <div class="category-content" id="glutenfree-content">
+        <img src="https://via.placeholder.com/600x400?text=Gluten-Free+Cake" alt="Gluten-Free Cake">
+        <h2>Gluten-Free Cake Recipe</h2>
+        <p>This gluten-free cake is just as delicious and moist as its traditional counterparts, but made without any gluten!</p>
+        <div class="cake-fact">Gluten-free cakes are great for those with gluten intolerance or celiac disease.</div>
+    </div>
+    <div class="category-content" id="carrot-content">
+        <img src="https://via.placeholder.com/600x400?text=Carrot+Cake" alt="Carrot Cake">
+        <h2>Carrot Cake Recipe</h2>
+        <p>This moist carrot cake is packed with warm spices and topped with cream cheese frosting.</p>
+        <div class="cake-fact">Carrot cakes became popular in the 1960s and are known for their deliciously rich flavor.</div>
+    </div>
+    
+    <div class="category-content" id="coffee-content">
+        <img src="https://via.placeholder.com/600x400?text=Coffee+Cake" alt="Coffee Cake">
+        <h2>Coffee Cake Recipe</h2>
+        <p>A tender cake with a cinnamon streusel topping, perfect for pairing with coffee.</p>
+        <div class="cake-fact">Coffee cakes were originally designed to complement the coffee-drinking experience.</div>
+    </div>
+    
+    <div class="category-content" id="redvelvet-content">
+        <img src="https://via.placeholder.com/600x400?text=Red+Velvet+Cake" alt="Red Velvet Cake">
+        <h2>Red Velvet Cake Recipe</h2>
+        <p>Known for its rich red color and creamy frosting, this cake is a showstopper.</p>
+        <div class="cake-fact">The red velvet cake is believed to have originated in the southern United States.</div>
+    </div>
+    
+    <div class="category-content" id="lemon-content">
+        <img src="https://via.placeholder.com/600x400?text=Lemon+Cake" alt="Lemon Cake">
+        <h2>Lemon Cake Recipe</h2>
+        <p>This light and fluffy lemon cake has a refreshing tang and pairs well with a citrus glaze.</p>
+        <div class="cake-fact">Lemon cakes have been a favorite for summer celebrations due to their lightness and zest.</div>
+    </div>
+    
+    <div class="category-content" id="pumpkin-content">
+        <img src="https://via.placeholder.com/600x400?text=Pumpkin+Cake" alt="Pumpkin Cake">
+        <h2>Pumpkin Cake Recipe</h2>
+        <p>Autumn-inspired pumpkin cake with spices like cinnamon, nutmeg, and cloves.</p>
+        <div class="cake-fact">Pumpkin cakes are a fall favorite, often enjoyed with a dollop of whipped cream.</div>
+    </div>
+    
+
+    <script>
+        gsap.to("#categories", { opacity: 1, y: 0, duration: 1, ease: "power2.out" });
+
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const category = item.getAttribute('data-category');
+                gsap.to(".category-content", { opacity: 0, duration: 1 });
+                gsap.to(`#${category}-content`, { opacity: 1, duration: 1, delay: 0.5 }); 
+            });
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.toLowerCase();
+            document.querySelectorAll('.category-item').forEach(item => {
+                const title = item.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(query)) {
+                    gsap.to(item, { opacity: 1, y: 0, duration: 0.5 });
+                    item.style.display = 'block';
+                } else {
+                    gsap.to(item, { opacity: 0, y: 20, duration: 0.5 });
+                    setTimeout(() => item.style.display = 'none', 500); 
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
